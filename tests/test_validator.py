@@ -1,8 +1,6 @@
 import unittest
 from src.validator import Validator
-
-MONTHS_LIST = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
-DAY_OF_WEEK_LIST = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+from src.constants import MONTHS_LIST, DAY_OF_WEEK_LIST
 
 
 class TestValidator(unittest.TestCase):
@@ -417,6 +415,3 @@ class TestValidator(unittest.TestCase):
         is_cron_valid = validator.validate(eight_cron_expression)
         self.assertFalse(is_cron_valid)
 
-
-if __name__ == '__main__':
-    unittest.main()
