@@ -344,6 +344,79 @@ class TestValidator(unittest.TestCase):
         self.assertFalse(is_numbers_list_valid)
         self.assertFalse(is_alternative_list_valid)
 
+    # YEAR VALIDATION
+    def test_should_validate_every_year_expression(self):
+        star_expression = "*"
+        is_star_expression_valid = Validator.validate_year(star_expression)
+        self.assertTrue(is_star_expression_valid)
+
+    def test_should_validate_step_year_expression_when_the_year_value_is_lesser_than_or_equals_to_2099(self):
+        star_expression = "*/2099"
+        number_expression = "1970/2023"
+        is_star_expression_valid = Validator.validate_year(star_expression)
+        is_number_expression_valid = Validator.validate_year(number_expression)
+        self.assertTrue(is_star_expression_valid)
+        self.assertTrue(is_number_expression_valid)
+
+    def test_should_validate_step_year_expression_when_the_year_value_is_greater_than_or_equals_to_1970(self):
+        star_expression = "*/1970"
+        number_expression = "1970/1985"
+        is_star_expression_valid = Validator.validate_year(star_expression)
+        is_number_expression_valid = Validator.validate_year(number_expression)
+        self.assertTrue(is_star_expression_valid)
+        self.assertTrue(is_number_expression_valid)
+
+    def test_should_not_validate_step_year_expression_when_the_year_value_is_greater_than_2099(self):
+        star_expression = "*/3000"
+        number_expression = "1975/3050"
+        is_star_expression_valid = Validator.validate_year(star_expression)
+        is_number_expression_valid = Validator.validate_year(number_expression)
+        self.assertFalse(is_star_expression_valid)
+        self.assertFalse(is_number_expression_valid)
+
+    def test_should_not_validate_step_year_expression_when_the_year_value_is_lesser_than_1970(self):
+        star_expression = "*/1969"
+        number_expression = "1930/1975"
+        is_star_expression_valid = Validator.validate_year(star_expression)
+        is_number_expression_valid = Validator.validate_year(number_expression)
+        self.assertFalse(is_star_expression_valid)
+        self.assertFalse(is_number_expression_valid)
+
+    def test_should_validate_range_year_expression_when_first_value_is_lesser_then_the_second_value(self):
+        range_expression = "1970-2023"
+        is_range_valid = Validator.validate_year(range_expression)
+        self.assertTrue(is_range_valid)
+
+    def test_should_not_validate_range_year_expression_when_first_value_is_greater_than_the_second_value(self):
+        range_expression = "2030-2001"
+        is_range_valid = Validator.validate_year(range_expression)
+        self.assertFalse(is_range_valid)
+
+    # VALIDATIONS WITH FULL CRON EXPRESSIONS
+    def test_should_validate_six_positional_arguments_expression(self):
+        validator = Validator()
+        six_cron_expression = "0 0 12 * * *"
+        is_cron_valid = validator.validate(six_cron_expression)
+        self.assertTrue(is_cron_valid)
+
+    def test_should_validate_seven_positional_arguments_expression(self):
+        validator = Validator()
+        seven_cron_expression = "0 0/5 14,18,23 ? JAN,MAR,SEP MON-FRI 2002-2010"
+        is_cron_valid = validator.validate(seven_cron_expression)
+        self.assertTrue(is_cron_valid)
+
+    def test_should_not_validate_expressions_with_less_than_six_positional_arguments(self):
+        validator = Validator()
+        five_cron_expression = "* * * * *"
+        is_cron_valid = validator.validate(five_cron_expression)
+        self.assertFalse(is_cron_valid)
+
+    def test_should_not_validate_expressions_with_more_than_seven_positional_arguments(self):
+        validator = Validator()
+        eight_cron_expression = "* * * * * * * *"
+        is_cron_valid = validator.validate(eight_cron_expression)
+        self.assertFalse(is_cron_valid)
+
 
 if __name__ == '__main__':
     unittest.main()
