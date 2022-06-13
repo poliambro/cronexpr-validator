@@ -398,20 +398,17 @@ class TestValidator(unittest.TestCase):
         self.assertTrue(is_cron_valid)
 
     def test_should_validate_seven_positional_arguments_expression(self):
-        validator = Validator()
         seven_cron_expression = "0 0/5 14,18,23 ? JAN,MAR,SEP MON-FRI 2002-2010"
-        is_cron_valid = validator.validate(seven_cron_expression)
+        is_cron_valid = Validator.validate(seven_cron_expression)
         self.assertTrue(is_cron_valid)
 
     def test_should_not_validate_expressions_with_less_than_six_positional_arguments(self):
-        validator = Validator()
         five_cron_expression = "* * * * *"
-        is_cron_valid = validator.validate(five_cron_expression)
+        is_cron_valid = Validator.validate(five_cron_expression)
         self.assertFalse(is_cron_valid)
 
     def test_should_not_validate_expressions_with_more_than_seven_positional_arguments(self):
-        validator = Validator()
         eight_cron_expression = "* * * * * * * *"
-        is_cron_valid = validator.validate(eight_cron_expression)
+        is_cron_valid = Validator.validate(eight_cron_expression)
         self.assertFalse(is_cron_valid)
 
