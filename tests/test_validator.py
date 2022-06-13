@@ -1,6 +1,6 @@
 import unittest
-from src.validator import Validator
-from src.constants import MONTHS_LIST, DAY_OF_WEEK_LIST
+from src.validator.validator import Validator
+from validator.constants import MONTHS_LIST, DAY_OF_WEEK_LIST
 
 
 class TestValidator(unittest.TestCase):

@@ -1,5 +1,5 @@
 import re
-from src import constants
+from validator import constants
 
 
 class Validator:
