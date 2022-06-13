@@ -54,6 +54,23 @@ class TestValidator(unittest.TestCase):
         is_list_valid = Validator.validate_seconds_and_minutes(list_expression)
         self.assertFalse(is_list_valid)
 
+    def test_should_validate_seconds_and_minutes_range_values_within_list_expression(self):
+        list_expression = "0,10,20-30,40-50,59"
+        is_list_valid = Validator.validate_seconds_and_minutes(list_expression)
+        self.assertTrue(is_list_valid)
+
+    def test_should_not_validate_sec_and_min_range_values_within_list_when_the_first_value_is_greater_than_the_second(
+            self):
+        list_expression = "0,10,20-30,59-50,59"
+        is_list_valid = Validator.validate_seconds_and_minutes(list_expression)
+        self.assertFalse(is_list_valid)
+
+    def test_should_not_validate_seconds_and_minutes_range_values_within_list_when_one_of_the_values_is_outside_range(
+            self):
+        list_expression = "0,10,20-30,40-60,59"
+        is_list_valid = Validator.validate_seconds_and_minutes(list_expression)
+        self.assertFalse(is_list_valid)
+
     # HOURS VALIDATION
     def test_should_validate_every_hours_expression(self):
         expression = "*"
@@ -98,6 +115,22 @@ class TestValidator(unittest.TestCase):
 
     def test_should_not_validate_hours_list_expression_when_the_list_ends_with_a_comma(self):
         list_expression = "0,12,15,23,"
+        is_list_valid = Validator.validate_hours(list_expression)
+        self.assertFalse(is_list_valid)
+
+    def test_should_validate_hours_range_values_within_list_expression(self):
+        list_expression = "0,5,10,11-14,19,20-23"
+        is_list_valid = Validator.validate_hours(list_expression)
+        self.assertTrue(is_list_valid)
+
+    def test_should_not_validate_hours_range_values_within_list_when_the_first_value_is_greater_than_the_second(
+            self):
+        list_expression = "0,5,10,11-14,19,20-19"
+        is_list_valid = Validator.validate_hours(list_expression)
+        self.assertFalse(is_list_valid)
+
+    def test_should_not_validate_hours_range_values_within_list_when_one_of_the_values_is_outside_range(self):
+        list_expression = "0,10,20-22,22-24,23"
         is_list_valid = Validator.validate_hours(list_expression)
         self.assertFalse(is_list_valid)
 
@@ -166,23 +199,39 @@ class TestValidator(unittest.TestCase):
         is_list_valid = Validator.validate_day_of_month(list_expression)
         self.assertFalse(is_list_valid)
 
+    def test_should_validate_day_of_month_range_values_within_list_expression(self):
+        list_expression = "1,5,10,11-14,19,20-23"
+        is_list_valid = Validator.validate_day_of_month(list_expression)
+        self.assertTrue(is_list_valid)
+
+    def test_should_not_validate_day_of_month_range_values_within_list_when_the_first_value_is_greater_than_the_second(
+            self):
+        list_expression = "1,5,10,11-14,19,20-19"
+        is_list_valid = Validator.validate_day_of_month(list_expression)
+        self.assertFalse(is_list_valid)
+
+    def test_should_not_validate_day_of_month_range_values_within_list_when_one_of_the_values_is_outside_range(self):
+        list_expression = "1,10,20-22,22-32,23"
+        is_list_valid = Validator.validate_day_of_month(list_expression)
+        self.assertFalse(is_list_valid)
+
     # MONTH VALIDATIONS
     def test_should_validate_every_month_expression(self):
         expression = "*"
         is_valid = Validator.validate_month(expression)
         self.assertTrue(is_valid)
 
-    def test_should_validate_step_month_expression_when_the_month_value_is_lesser_than_or_equals_to_11(self):
-        star_expression = "*/11"
-        number_expression = "0/11"
+    def test_should_validate_step_month_expression_when_the_month_value_is_lesser_than_or_equals_to_12(self):
+        star_expression = "*/12"
+        number_expression = "1/12"
         is_star_expression_valid = Validator.validate_month(star_expression)
         is_number_expression_valid = Validator.validate_month(number_expression)
         self.assertTrue(is_star_expression_valid)
         self.assertTrue(is_number_expression_valid)
 
-    def test_should_not_validate_step_month_expression_when_the_month_value_is_greater_than_11(self):
-        star_expression = "*/12"
-        number_expression = "0/12"
+    def test_should_not_validate_step_month_expression_when_the_month_value_is_greater_than_12(self):
+        star_expression = "*/13"
+        number_expression = "1/14"
         is_star_expression_valid = Validator.validate_month(star_expression)
         is_number_expression_valid = Validator.validate_month(number_expression)
         self.assertFalse(is_star_expression_valid)
@@ -244,6 +293,31 @@ class TestValidator(unittest.TestCase):
         is_numbers_list_valid = Validator.validate_month(numbers_list_expression)
         is_alternative_list_valid = Validator.validate_month(alternative_list_expression)
         self.assertFalse(is_numbers_list_valid)
+        self.assertFalse(is_alternative_list_valid)
+
+    def test_should_validate_month_range_values_within_list_expression(self):
+        list_expression = "1,5-7,8,10-12"
+        alternative_list_expression = "JAN,FEB,MAR-JUL,SEP-DEC"
+        is_list_valid = Validator.validate_month(list_expression)
+        is_alternative_list_valid = Validator.validate_month(alternative_list_expression)
+        self.assertTrue(is_list_valid)
+        self.assertTrue(is_alternative_list_valid)
+
+    def test_should_not_validate_month_range_values_within_list_when_the_first_value_is_greater_than_the_second(
+            self):
+        list_expression = "1,8-7,8,10-11"
+        alternative_list_expression = "JAN,FEB,DEC-JUL,SEP-DEC"
+        is_list_valid = Validator.validate_month(list_expression)
+        is_alternative_list_valid = Validator.validate_month(alternative_list_expression)
+        self.assertFalse(is_list_valid)
+        self.assertFalse(is_alternative_list_valid)
+
+    def test_should_not_validate_month_range_values_within_list_when_one_of_the_values_is_outside_range(self):
+        list_expression = "1,5-7,8,10-14"
+        alternative_list_expression = "JAN,FEB,MAR-JUL,SEP-TES"
+        is_list_valid = Validator.validate_month(list_expression)
+        is_alternative_list_valid = Validator.validate_month(alternative_list_expression)
+        self.assertFalse(is_list_valid)
         self.assertFalse(is_alternative_list_valid)
 
     # DAY OF THE WEEK VALIDATIONS
@@ -341,6 +415,31 @@ class TestValidator(unittest.TestCase):
         is_alternative_list_valid = Validator.validate_day_of_week(alternative_list_expression)
         self.assertFalse(is_numbers_list_valid)
         self.assertFalse(is_alternative_list_valid)
+        
+    def test_should_validate_day_of_week_range_values_within_list_expression(self):
+        list_expression = "0,2,3-5,6"
+        alternative_list_expression = "SUN,MON,WED-FRI,SAT"
+        is_list_valid = Validator.validate_day_of_week(list_expression)
+        is_alternative_list_valid = Validator.validate_day_of_week(alternative_list_expression)
+        self.assertTrue(is_list_valid)
+        self.assertTrue(is_alternative_list_valid)
+
+    def test_should_not_validate_day_of_week_range_values_within_list_when_the_first_value_is_greater_than_the_second(
+            self):
+        list_expression = "0,3-5,6-2"
+        alternative_list_expression = "SUN,THU-MON,SAT"
+        is_list_valid = Validator.validate_day_of_week(list_expression)
+        is_alternative_list_valid = Validator.validate_day_of_week(alternative_list_expression)
+        self.assertFalse(is_list_valid)
+        self.assertFalse(is_alternative_list_valid)
+
+    def test_should_not_validate_day_of_week_range_values_within_list_when_one_of_the_values_is_outside_range(self):
+        list_expression = "0,2-5,6,8"
+        alternative_list_expression = "SUN,MON,THU-FRI,TES"
+        is_list_valid = Validator.validate_day_of_week(list_expression)
+        is_alternative_list_valid = Validator.validate_day_of_week(alternative_list_expression)
+        self.assertFalse(is_list_valid)
+        self.assertFalse(is_alternative_list_valid)
 
     # YEAR VALIDATION
     def test_should_validate_every_year_expression(self):
@@ -390,6 +489,22 @@ class TestValidator(unittest.TestCase):
         is_range_valid = Validator.validate_year(range_expression)
         self.assertFalse(is_range_valid)
 
+    def test_should_validate_year_range_values_within_list_expression(self):
+        list_expression = "1970,1975-1985,1990,2000-2010"
+        is_list_valid = Validator.validate_year(list_expression)
+        self.assertTrue(is_list_valid)
+
+    def test_should_not_validate_year_range_values_within_list_when_the_first_value_is_greater_than_the_second(
+            self):
+        list_expression = "1970,2000-1990,2022,2099"
+        is_list_valid = Validator.validate_year(list_expression)
+        self.assertFalse(is_list_valid)
+
+    def test_should_not_validate_year_range_values_within_list_when_one_of_the_values_is_outside_range(self):
+        list_expression = "1980,1990,2000,2009,2010-3000"
+        is_list_valid = Validator.validate_year(list_expression)
+        self.assertFalse(is_list_valid)
+
     # VALIDATIONS WITH FULL CRON EXPRESSIONS
     def test_should_validate_six_positional_arguments_expression(self):
         validator = Validator()
@@ -411,4 +526,3 @@ class TestValidator(unittest.TestCase):
         eight_cron_expression = "* * * * * * * *"
         is_cron_valid = Validator.validate(eight_cron_expression)
         self.assertFalse(is_cron_valid)
-
