@@ -178,11 +178,22 @@ class TestValidator(unittest.TestCase):
         near_day_3_expression = "3W"
         is_near_day_3_valid = Validator.validate_day_of_month(near_day_3_expression)
         self.assertTrue(is_near_day_3_valid)
+        near_day_3_expression = "W3"
+        is_near_day_3_valid = Validator.validate_day_of_month(near_day_3_expression)
+        self.assertTrue(is_near_day_3_valid)
 
     def test_should_not_validate_near_day_without_number_expression(self):
         near_day_without_number_expression = "W"
         is_near_day_without_number_valid = Validator.validate_day_of_month(near_day_without_number_expression)
         self.assertFalse(is_near_day_without_number_valid)
+
+    def test_should_validate_last_week_day_expression(self):
+        last_week_day_expression = "LW"
+        is_expression_valid = Validator.validate_day_of_month(last_week_day_expression)
+        self.assertTrue(is_expression_valid)
+        last_week_day_expression = "WL"
+        is_expression_valid = Validator.validate_day_of_month(last_week_day_expression)
+        self.assertTrue(is_expression_valid)
 
     def test_should_validate_day_of_month_list_expression_when_values_are_valid(self):
         list_expression = "1,12,15,23,31"
@@ -273,7 +284,7 @@ class TestValidator(unittest.TestCase):
 
     def test_should_validate_month_list_expression_when_values_are_valid(self):
         numbers_list_expression = "1,3,4"
-        alternative_list_expression = "JAN,MAR,APR"
+        alternative_list_expression = "jan,MAR,APR"
         is_numbers_list_valid = Validator.validate_month(numbers_list_expression)
         is_alternative_list_valid = Validator.validate_month(alternative_list_expression)
         self.assertTrue(is_numbers_list_valid)
@@ -373,15 +384,27 @@ class TestValidator(unittest.TestCase):
 
     def test_should_validate_last_day_of_week_expression(self):
         last_day_expression = "L"
-        last_day_expression_with_number_day = "3L"
-        last_day_expression_with_alternative_value_day = "MONL"
         is_last_day_valid = Validator.validate_day_of_week(last_day_expression)
+        self.assertTrue(is_last_day_valid)
+
+    def test_should_validate_last_day_of_week_expression_with_number_value(self):
+        last_day_expression_with_number_day = "3L"
         is_last_day_expression_with_number_day_valid = \
             Validator.validate_day_of_week(last_day_expression_with_number_day)
+        self.assertTrue(is_last_day_expression_with_number_day_valid)
+        last_day_expression_with_number_day = "L3"
+        is_last_day_expression_with_number_day_valid = \
+            Validator.validate_day_of_week(last_day_expression_with_number_day)
+        self.assertTrue(is_last_day_expression_with_number_day_valid)
+
+    def test_should_validate_last_day_of_week_expression_with_alternative_value(self):
+        last_day_expression_with_alternative_value_day = "MONL"
         is_last_day_expression_with_alternative_value_day_valid = \
             Validator.validate_day_of_week(last_day_expression_with_alternative_value_day)
-        self.assertTrue(is_last_day_valid)
-        self.assertTrue(is_last_day_expression_with_number_day_valid)
+        self.assertTrue(is_last_day_expression_with_alternative_value_day_valid)
+        last_day_expression_with_alternative_value_day = "Lmon"
+        is_last_day_expression_with_alternative_value_day_valid = \
+            Validator.validate_day_of_week(last_day_expression_with_alternative_value_day)
         self.assertTrue(is_last_day_expression_with_alternative_value_day_valid)
 
     def test_should_validate_step_day_of_week_expression_when_the_day_of_week_value_is_alternative(self):
@@ -435,7 +458,7 @@ class TestValidator(unittest.TestCase):
 
     def test_should_not_validate_day_of_week_range_values_within_list_when_one_of_the_values_is_outside_range(self):
         list_expression = "0,2-5,6,8"
-        alternative_list_expression = "SUN,MON,THU-FRI,TES"
+        alternative_list_expression = "sun,MON,THU-FRI,TES"
         is_list_valid = Validator.validate_day_of_week(list_expression)
         is_alternative_list_valid = Validator.validate_day_of_week(alternative_list_expression)
         self.assertFalse(is_list_valid)
